@@ -37,6 +37,7 @@ export default {
       if(this.searchCountry.trim() === '') {
         this.searchResult = this.data
         this.totalCountry = this.data.length
+        this.searchTotalPage = Math.ceil(this.totalCountry/this.countryPerPage)
         this.gotoPage(1)
       } else {
         const options = {
@@ -54,8 +55,6 @@ export default {
         this.searchTotalPage = Math.ceil(this.totalCountry/this.countryPerPage)
         this.gotoPage(1)
       }
-
-      
     },
 
     gotoPage(page) {
@@ -85,11 +84,29 @@ export default {
       } else {
         this.nextBtn = true
       }
+    },
 
-      console.log(goto)
-      console.log(until)
-      console.log(this.previousBtn)
-      console.log(this.currentPage)
+    sortCountries() {
+      if(this.sortBy === "ASC") {
+        let sortData = this.data
+        let sort = sortData.slice().sort((a, b) => a.name.common.localeCompare(b.name.common));
+        this.searchResult = sort
+
+        this.totalCountry = sort.length
+        this.gotoPage(1)
+      } else if(this.sortBy === "DESC") {
+        let sortData = this.data
+        let sort = sortData.slice().sort((a, b) => b.name.common.localeCompare(a.name.common));
+        this.searchResult = sort
+
+        this.totalCountry = sort.length
+        this.gotoPage(1)
+      } else {
+        this.searchResult = this.data
+
+        this.totalCountry = this.data.length
+        this.gotoPage(1)
+      }
     }
   }
 }
@@ -112,8 +129,9 @@ export default {
       <select class="px-[10px] py-[5px] rounded-[10px] border-solid border border-[#6046fd]" v-model="sortBy"
         @change="sortCountries">
         <option value="sort_by" disabled>Sort By</option>
-        <option value="ASC">Name (ASC)</option>
-        <option value="DESC">Name (DESC)</option>
+        <option value="default">Deafult</option>
+        <option value="ASC">A-Z</option>
+        <option value="DESC">Z-A</option>
       </select>
 
       <div class="w-full md:w-1/3">
@@ -170,16 +188,16 @@ export default {
   <div class="container md:mb-8 pt-8 px-4 mx-auto flex justify-center select-none">
     <button :disabled="!previousBtn" :class="{ 'block border px-4 py-2 rounded-l hover:bg-gray-200 text-gray-600' : previousBtn, 'block border px-4 py-2 rounded-l text-gray-300' : !previousBtn }" @click="gotoPage(this.currentPage - 1)">&larr;</button>
 
-    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 1, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 1, 'hidden' : searchTotalPage < 1}" @click="gotoPage(1)">1</button>
-    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 2, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 2, 'hidden' : searchTotalPage < 2}" @click="gotoPage(2)">2</button>
-    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 3, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 3, 'hidden' : searchTotalPage < 3}" @click="gotoPage(3)">3</button>
-    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 4, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 4, 'hidden' : searchTotalPage < 4}" @click="gotoPage(4)">4</button>
-    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 5, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 5, 'hidden' : searchTotalPage < 5}" @click="gotoPage(5)">5</button>
-    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 6, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 6, 'hidden' : searchTotalPage < 6}" @click="gotoPage(6)">6</button>
-    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 7, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 7, 'hidden' : searchTotalPage < 7}" @click="gotoPage(7)">7</button>
-    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 8, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 8, 'hidden' : searchTotalPage < 8}" @click="gotoPage(8)">8</button>
-    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 9, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 9, 'hidden' : searchTotalPage < 9}" @click="gotoPage(9)">9</button>
-    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 10, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 10, 'hidden' : searchTotalPage < 10}" @click="gotoPage(10)">10</button>
+    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 1, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 1}" v-if="searchTotalPage >= 1" @click="gotoPage(1)">1</button>
+    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 2, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 2}" v-if="searchTotalPage >= 2" @click="gotoPage(2)">2</button>
+    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 3, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 3}" v-if="searchTotalPage >= 3" @click="gotoPage(3)">3</button>
+    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 4, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 4}" v-if="searchTotalPage >= 4" @click="gotoPage(4)">4</button>
+    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 5, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 5}" v-if="searchTotalPage >= 5" @click="gotoPage(5)">5</button>
+    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 6, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 6}" v-if="searchTotalPage >= 6" @click="gotoPage(6)">6</button>
+    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 7, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 7}" v-if="searchTotalPage >= 7" @click="gotoPage(7)">7</button>
+    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 8, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 8}" v-if="searchTotalPage >= 8" @click="gotoPage(8)">8</button>
+    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 9, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 9}" v-if="searchTotalPage >= 9" @click="gotoPage(9)">9</button>
+    <button :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 10, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 10}" v-if="searchTotalPage >= 10" @click="gotoPage(10)">10</button>
 
     <button :disabled="!nextBtn" :class="{ 'block border px-4 py-2 rounded-r hover:bg-gray-200 text-gray-600' : nextBtn, 'block border px-4 py-2 rounded-r text-gray-300' : !nextBtn }"  rel="next" @click="gotoPage(this.currentPage + 1)">&rarr;</button>
   </div>
