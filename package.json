@@ -9,7 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.3.11"
+    "axios": "^1.6.5",
+    "fuzzysort": "^2.0.4",
+    "vue": "^3.3.11",
+    "vue-fuse": "^4.1.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",
