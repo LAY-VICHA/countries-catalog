@@ -1,7 +1,7 @@
 <script setup>
-import HelloWord from './components/HelloWorld.vue'
+import ListCountry from './components/ListCountry.vue'
 </script>
 
 <template>
-  <HelloWord />
+  <ListCountry />
 </template>

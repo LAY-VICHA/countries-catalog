@@ -21,7 +21,7 @@ export default {
 <template>
     <div class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full flex justify-center items-center
         bg-white/[0.44] backdrop-opacity-[1.5]">
-        <div class="bg-white max-w-1/2">
+        <div class="bg-white w-1/2">
             <div
                 class="overflow-y-auto overflow-x-hidden justify-center items-center w-fullmd:inset-0 h-[calc(100%-1rem)] max-h-full">
                 <div class="relative p-4 max-h-full w-full">
@@ -79,8 +79,8 @@ export default {
                                 </div>
                             </div>
 
-                            <div class="mb-2">
-                                <div class="font-semibold text-[18px] text-gray-700 dark:text-gray-400 mb-1">Native Country:</div>
+                            <div class="mb-1 font-semibold text-[18px] text-gray-700 dark:text-gray-400">Native Country:</div>
+                            <div class="scroll-display overflow-y-scroll max-h-[150px] mb-2">
                                 <div v-for="(nativeName, id) in country.name.nativeName" :key="id">
                                     <p class="font-normal text-gray-700 dark:text-gray-400"><span class="font-semibold">{{ id }}:</span> {{
                                     nativeName.official }}</p>
@@ -90,8 +90,6 @@ export default {
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
 </template>

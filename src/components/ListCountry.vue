@@ -67,13 +67,10 @@ export default {
         this.gotoPage(1)
       } else {
         const options = {
-          keys: ['name.common'], // specify the keys you want to search in
+          keys: ['name.common'],
         };
 
-        // Use fuzzysort to perform fuzzy sorting
         const results = fuzzysort.go(this.searchCountry, this.data, options);
-
-        // Extract the sorted items from the results
         const sortedItems = results.map(result => result.obj);
 
         this.searchResult = sortedItems;
@@ -140,18 +137,8 @@ export default {
 </script>
 
 <template>
-  <header class="bg-[#ffda71]">
+  <header class="bg-white">
     <div class="flex justify-between gap-[50px] px-[50px] py-[20px] ">
-      <!-- <div class="flex gap-[20px] items-center">
-      <img src="../../src/assets/world-icon.svg" class="w-[70px] h-[70px]" />
-      <div class="text-[28px] font-semibold">Countries Catalog</div>
-    </div> -->
-
-      <!-- <div class="flex">
-      <input class="border border-solid border-black"/>
-      <div>Search</div>
-    </div> -->
-
       <select class="px-[10px] py-[5px] rounded-[10px] border-solid border border-[#6046fd]" v-model="sortBy"
         @change="sortCountries">
         <option value="sort_by" disabled>Sort By</option>
@@ -177,7 +164,7 @@ export default {
 
   <div class="px-[30px] py-[30px] grid grid-cols sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-[30px]">
     <div class="" v-for="data in displayCountry" :key="data.cnn3">
-      <div class="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+      <div class="w-full h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
         @click="() => togglePopup('buttonTrigger', data)">
         <div class="w-full h-[170px] bg-[#eaeaea]">
           <img class="rounded-t-lg w-full h-full object-contain" :src="data.flags.png" alt="" />
@@ -187,29 +174,34 @@ export default {
           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ data.name.official }}</h5>
           <p class="mb-2 font-normal text-gray-700 dark:text-gray-400"><span class="font-semibold">cca2/cca3:</span> {{
             data.cca2 }}/{{ data.cca3 }}</p>
-          <div class="mb-2">
+          <div class="mb-2 scroll-display overflow-y-scroll max-h-[100px]">
             <p class="font-normal text-gray-700 dark:text-gray-400"><span class="font-semibold">Calling Code:</span>
             <div v-for="(suffixes, id) in data.idd.suffixes" :key="id" class="inline">
               <span v-if="id != 0">, </span>
               {{ data.idd.root }}{{ suffixes }}
             </div>
-          </p>
-          </div>
-          
-          <div class="font-semibold text-gray-700 dark:text-gray-400">Native name: </div>
-          <div v-for="(nativeName, id) in data.name.nativeName" :key="id">
-            <p class="font-normal text-gray-700 dark:text-gray-400"><span class="font-semibold">{{ id }}:</span> {{
-              nativeName.official }}</p>
+            </p>
           </div>
 
-          <div class="mt-2">
-            <div class="font-semibold text-gray-700 dark:text-gray-400 inline">Alternative name: </div>
-            <div v-for="(altSpellings, id) in data.altSpellings" :key="id" class="inline mt-2">
-              <p class="font-normal inline text-gray-700 dark:text-gray-400"><span v-if="id != 0"> - </span>{{
-                altSpellings
-              }}</p>
+          <div class="scroll-display overflow-y-scroll max-h-[100px]">
+            <div class="font-semibold text-gray-700 dark:text-gray-400">Native name: </div>
+            <div v-for="(nativeName, id) in data.name.nativeName" :key="id">
+              <p class="font-normal text-gray-700 dark:text-gray-400"><span class="font-semibold">{{ id }}:</span> {{
+                nativeName.official }}</p>
             </div>
           </div>
+
+          <div class="scroll-display overflow-y-scroll max-h-[100px]">
+            <div class="mt-2">
+              <div class="font-semibold text-gray-700 dark:text-gray-400 inline">Alternative name: </div>
+              <div v-for="(altSpellings, id) in data.altSpellings" :key="id" class="inline mt-2">
+                <p class="font-normal inline text-gray-700 dark:text-gray-400"><span v-if="id != 0"> - </span>{{
+                  altSpellings
+                }}</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -236,30 +228,41 @@ export default {
       :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600': currentPage !== 4, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white': currentPage === 4 }"
       v-if="searchTotalPage >= 4" @click="gotoPage(4)">4</button>
     <button
-    :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 5, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 5}"
-    v-if="searchTotalPage >= 5" @click="gotoPage(5)">5</button>
-  <button
-    :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 6, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 6}"
-    v-if="searchTotalPage >= 6" @click="gotoPage(6)">6</button>
-  <button
-    :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 7, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 7}"
-    v-if="searchTotalPage >= 7" @click="gotoPage(7)">7</button>
-  <button
-    :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 8, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 8}"
-    v-if="searchTotalPage >= 8" @click="gotoPage(8)">8</button>
-  <button
-    :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 9, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 9}"
-    v-if="searchTotalPage >= 9" @click="gotoPage(9)">9</button>
-  <button
-    :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600' : currentPage !== 10, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white' : currentPage === 10}"
-    v-if="searchTotalPage >= 10" @click="gotoPage(10)">10</button>
+      :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600': currentPage !== 5, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white': currentPage === 5 }"
+      v-if="searchTotalPage >= 5" @click="gotoPage(5)">5</button>
+    <button
+      :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600': currentPage !== 6, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white': currentPage === 6 }"
+      v-if="searchTotalPage >= 6" @click="gotoPage(6)">6</button>
+    <button
+      :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600': currentPage !== 7, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white': currentPage === 7 }"
+      v-if="searchTotalPage >= 7" @click="gotoPage(7)">7</button>
+    <button
+      :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600': currentPage !== 8, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white': currentPage === 8 }"
+      v-if="searchTotalPage >= 8" @click="gotoPage(8)">8</button>
+    <button
+      :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600': currentPage !== 9, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white': currentPage === 9 }"
+      v-if="searchTotalPage >= 9" @click="gotoPage(9)">9</button>
+    <button
+      :class="{ 'block border px-4 py-2 hover:bg-gray-200 text-gray-600': currentPage !== 10, 'block border px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white': currentPage === 10 }"
+      v-if="searchTotalPage >= 10" @click="gotoPage(10)">10</button>
 
-  <button :disabled="!nextBtn"
-    :class="{ 'block border px-4 py-2 rounded-r hover:bg-gray-200 text-gray-600' : nextBtn, 'block border px-4 py-2 rounded-r text-gray-300' : !nextBtn }"
-    rel="next" @click="gotoPage(this.currentPage + 1)">&rarr;</button>
-</div>
+    <button :disabled="!nextBtn"
+      :class="{ 'block border px-4 py-2 rounded-r hover:bg-gray-200 text-gray-600': nextBtn, 'block border px-4 py-2 rounded-r text-gray-300': !nextBtn }"
+      rel="next" @click="gotoPage(this.currentPage + 1)">&rarr;</button>
+  </div>
 </template>
 
 <style>
-@import "../assets/style.css";
+.scroll-display::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scroll-display::-webkit-scrollbar-thumb {
+  background: #D9D9D9;
+  border-radius: 5px;
+}
+
+/* .scroll-display::-webkit-scrollbar {
+    display: none;
+} */
 </style>
